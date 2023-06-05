@@ -136,19 +136,27 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
 
     date = new Date();
     var formatteddate = moment(date).format('ddd MMM DD YYYY');
-    console.log("If", formatteddate);
+
+    // var formatteddate = date.toLocaleDateString('en-US', options);
     
   } else {
+    date = new Date(date);
+    var formatteddate = moment(date).format('ddd MMM DD YYYY');
+    // var formatteddate = date.toLocaleDateString('en-US', options);
+//     console.log("If", formatteddate);
+    
+//   } else {
 
-    if (isValidDate(date)) {
-      date = new Date(date);
-      var formatteddate = moment(date).format('ddd MMM DD YYYY');
-      console.log("Else-if-valid-Date", formatteddate);
-    } else {
+//     if (isValidDate(date)) {
+//       date = new Date(date);
+//       var formatteddate = moment(date).format('ddd MMM DD YYYY');
+//       console.log("Else-if-valid-Date", formatteddate);
+//     } else {
 
-      console.log("Not-Valid-Date", date);
+//       console.log("Not-Valid-Date", date);
 
-    }
+//     }
+
 
   }
 
