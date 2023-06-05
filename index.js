@@ -5,7 +5,6 @@ const cors = require('cors')
 require('dotenv').config()
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
-const moment = require('moment');
 
 //  MongoDB Atlas Connection URI
 const uri = process.env.MONGO_URI;
@@ -112,14 +111,6 @@ app.get("/api/users", async(req, res) => {
   }
 });
 
-function isValidDate(dateString) {
-  // Regular expression pattern for "yyyy-mm-dd" format
-  const pattern = /^\d{4}-\d{2}-\d{2}$/;
-
-  // Check if the date string matches the pattern
-  return pattern.test(dateString);
-}
-
 const options = { 
   weekday: 'short', 
   year: 'numeric', 
@@ -128,40 +119,27 @@ const options = {
 };
 
 app.post("/api/users/:_id/exercises", async(req, res) => {
-  // const _id = req.params._id;
-  const _id = req.body._id;
+  const _id = req.params._id;
+  // const _id = req.body._id;
   const { description } = req.body;
-  const duration = parseInt(req.body.duration);
+  const duration = req.body.duration;
   let date =  req.body.date;
+
   const {username} = await Users.findById(_id);
-  // console.log(req.body);
-  // console.log(req.body._id);
-  // console.log(req.body);
-  // console.log("req.body.date", req.body.date);
+  console.log(req.body);
 
   if (date === '') {
 
     date = new Date();
     var formatteddate = date.toLocaleDateString('en-US', options);
-    // var formatteddate = moment(date).format('ddd MMM DD YYYY');
     console.log("If", formatteddate);
     
   } else {
-
-    if (isValidDate(date)) {
-      date = new Date(date);
-      var formatteddate = date.toLocaleDateString('en-US', options);
-      // var formatteddate = moment(date).format('ddd MMM DD YYYY');
-      console.log("Else-if-valid-Date", formatteddate);
-    } else {
-
-      console.log("Not-Valid-Date", date);
-
-    }
-
+    date = new Date(date);
+    var formatteddate = date.toLocaleDateString('en-US', options);
+    console.log("If", formatteddate);
   }
 
-  
   try {
     await Exercise.create({
       username: username,
@@ -176,11 +154,13 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
       date: formatteddate,
       duration: duration,
       description: description,
-    }
+    };
+    
     res.json(response);
+
   } catch (error) {
     res.json("error");
-    console.error('An error occurred:', error);
+    console.error('An error occurred:', error); 
   }
 
 });
