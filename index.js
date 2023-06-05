@@ -135,7 +135,7 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
     
   } else {
     date = new Date(date);
-    var formatteddate = date.toLocaleDateString('en-US', options);
+    var formatteddate = moment(date).format('ddd MMM DD YYYY');
   }
 
   
@@ -152,7 +152,7 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
       username: username,
       date: formatteddate,
       duration: duration,
-      description: description
+      description: description,
     }
     res.json(response);
   } catch (error) {
