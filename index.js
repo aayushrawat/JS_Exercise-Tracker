@@ -112,30 +112,52 @@ app.get("/api/users", async(req, res) => {
   }
 });
 
+function isValidDate(dateString) {
+  // Regular expression pattern for "yyyy-mm-dd" format
+  const pattern = /^\d{4}-\d{2}-\d{2}$/;
+
+  // Check if the date string matches the pattern
+  return pattern.test(dateString);
+}
 
 app.post("/api/users/:_id/exercises", async(req, res) => {
-  const _id = req.params._id;
-  const { description, duration} = req.body;
-  let date = req.body.date;
+  // const _id = req.params._id;
+  const _id = req.body._id;
+  const { description } = req.body;
+  const duration = parseInt(req.body.duration);
+  let date =  req.body.date;
   const {username} = await Users.findById(_id);
-  console.log(date);
-  const options = { 
-    weekday: 'short', 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
-  };
+  // console.log(req.body);
+  // console.log(req.body._id);
+  // console.log(req.body);
+  // console.log("req.body.date", req.body.date);
 
   if (date === '') {
 
     date = new Date();
     var formatteddate = moment(date).format('ddd MMM DD YYYY');
+
     // var formatteddate = date.toLocaleDateString('en-US', options);
     
   } else {
     date = new Date(date);
     var formatteddate = moment(date).format('ddd MMM DD YYYY');
     // var formatteddate = date.toLocaleDateString('en-US', options);
+//     console.log("If", formatteddate);
+    
+//   } else {
+
+//     if (isValidDate(date)) {
+//       date = new Date(date);
+//       var formatteddate = moment(date).format('ddd MMM DD YYYY');
+//       console.log("Else-if-valid-Date", formatteddate);
+//     } else {
+
+//       console.log("Not-Valid-Date", date);
+
+//     }
+
+
   }
 
   
@@ -148,16 +170,18 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
     });
 
     const response = {
+      _id:_id,
       username: username,
-      description: description,
+      date: formatteddate,
       duration: duration,
-      date: formatteddate
+      description: description,
     }
     res.json(response);
   } catch (error) {
+    res.json("error");
     console.error('An error occurred:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
   }
+
 });
 
 
