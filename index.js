@@ -114,8 +114,9 @@ app.get("/api/users", async(req, res) => {
 
 
 app.post("/api/users/:_id/exercises", async(req, res) => {
-  const _id = req.params._id;
+  // const _id = req.params._id;
   const { description } = req.body;
+  const _id = req.body._id;
   const duration = parseInt(req.body.duration);
   let date = req.body.date;
   const {username} = await Users.findById(_id);
