@@ -120,6 +120,13 @@ function isValidDate(dateString) {
   return pattern.test(dateString);
 }
 
+const options = { 
+  weekday: 'short', 
+  year: 'numeric', 
+  month: 'short', 
+  day: 'numeric' 
+};
+
 app.post("/api/users/:_id/exercises", async(req, res) => {
   // const _id = req.params._id;
   const _id = req.body._id;
@@ -135,14 +142,16 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
   if (date === '') {
 
     date = new Date();
-    var formatteddate = moment(date).format('ddd MMM DD YYYY');
+    var formatteddate = date.toLocaleDateString('en-US', options);
+    // var formatteddate = moment(date).format('ddd MMM DD YYYY');
     console.log("If", formatteddate);
     
   } else {
 
     if (isValidDate(date)) {
       date = new Date(date);
-      var formatteddate = moment(date).format('ddd MMM DD YYYY');
+      var formatteddate = date.toLocaleDateString('en-US', options);
+      // var formatteddate = moment(date).format('ddd MMM DD YYYY');
       console.log("Else-if-valid-Date", formatteddate);
     } else {
 
