@@ -145,6 +145,7 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
     });
 
     const response = {
+      _id:_id,
       username: username,
       description: description,
       duration: duration,
@@ -153,7 +154,7 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
     res.json(response);
   } catch (error) {
     console.error('An error occurred:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.json({error});
   }
 });
 
