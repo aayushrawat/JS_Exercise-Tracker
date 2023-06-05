@@ -5,6 +5,7 @@ const cors = require('cors')
 require('dotenv').config()
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
+const moment = require('moment');
 
 //  MongoDB Atlas Connection URI
 const uri = process.env.MONGO_URI;
@@ -128,7 +129,7 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
   if (date === '') {
 
     date = new Date();
-    var formatteddate = date.toLocaleDateString('en-US', options);
+    var formatteddate = moment(date).format('ddd MMM DD YYYY');
     
   } else {
     date = new Date(date);
@@ -147,9 +148,9 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
     const response = {
       _id:_id,
       username: username,
-      description: description,
+      date: formatteddate,
       duration: duration,
-      date: formatteddate
+      description: description
     }
     res.json(response);
   } catch (error) {
