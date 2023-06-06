@@ -56,6 +56,7 @@ const exercise = new mongoose.Schema({
 
 // Log Schema
 const log = new mongoose.Schema({
+  id: String,
   username: String,
   count: Number,
   log: [{
@@ -159,11 +160,52 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
     
     res.json(response);
 
+    const inlog = await Log.findOne({id:_id});
+    if (!!inlog) {
+      const counter = inlog.count;
+      const updatedcounter = (counter + 1);
+      await Log.findOneAndUpdate({id:_id}, {count: updatedcounter}, {new: true});
+      await Log.updateOne({id:_id}, {$push: {log: {
+        description: description,
+        duration: duration,
+        date: formatteddate,
+      }
+    }
+  });
+
+    } else {
+      await Log.create({
+        id: _id,
+        username: username,
+        count: 1,
+        log: [{
+          description: description,
+          duration: duration,
+          date: formatteddate,
+        }]
+      });
+    }
+
+
   } catch (error) {
     res.json("error");
     console.error('An error occurred:', error); 
   }
 
+});
+
+
+app.get("/api/users/:_id/logs", async(req, res) => {
+  const {_id } = req.params;
+  const logobj = await Log.findOne({id:_id});
+
+  const response = {
+    _id:_id,
+    username: logobj.username,
+    count: logobj.count,
+    log: logobj.log
+  }
+  res.json(response);
 });
 
 
