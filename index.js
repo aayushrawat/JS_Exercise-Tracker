@@ -47,6 +47,7 @@ const users = new mongoose.Schema({
 
 // Exercise Schema
 const exercise = new mongoose.Schema({
+  _id: String,
   username: String,
   description: String,
   duration: Number,
@@ -126,22 +127,20 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
   let date =  req.body.date;
 
   const {username} = await Users.findById(_id);
-  console.log(req.body);
 
   if (date === '') {
 
     date = new Date();
     var formatteddate = date.toLocaleDateString('en-US', options);
-    console.log("If", formatteddate);
     
   } else {
     date = new Date(date);
     var formatteddate = date.toLocaleDateString('en-US', options);
-    console.log("If", formatteddate);
   }
 
   try {
     await Exercise.create({
+      _id: _id,
       username: username,
       description: description,
       duration: duration,
