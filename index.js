@@ -198,17 +198,35 @@ app.post("/api/users/:_id/exercises", async(req, res) => {
 app.get("/api/users/:_id/logs", async(req, res) => {
   const {_id } = req.params;
   const logobj = await Log.findOne({id:_id});
+  const {from, to, limit} = req.query;
 
-  const response = {
-    _id:_id,
-    username: logobj.username,
-    count: logobj.count,
-    log: logobj.log
-  }
-  res.json(response);
+    try {
+      if (!logobj) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      let logs = logobj.log || [];
+      if (from) {
+        logs = logs.filter(log => new Date(log.date) >= new Date(from));
+      }
+      if (to) {
+        logs = logs.filter(log => new Date(log.date) <= new Date(to));
+      }
+      if (limit) {
+        logs = logs.slice(0, parseInt(limit));
+      }
+
+      const response = {
+        _id:_id,
+        username: logobj.username,
+        count: logobj.count,
+        log: logs
+      }
+      res.json(response);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'An error occurred' });
+    }
 });
-
-
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
