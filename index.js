@@ -210,14 +210,13 @@ app.get("/api/users/:_id/logs", async(req, res) => {
       }
       if (to) {
         logs = logs.filter(log => new Date(log.date) <= new Date(to));
+        logobj.log.forEach((log) => {
+          log.date = new Date(log.date).toDateString();
+        });
       }
       if (limit) {
         logs = logs.slice(0, parseInt(limit));
       }
-
-      logobj.log.forEach((log) => {
-        log.date = new Date(log.date).toLocaleDateString('en-US', options);
-      })
 
       const response = {
         _id:_id,
