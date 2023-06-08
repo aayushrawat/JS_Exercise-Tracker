@@ -216,7 +216,7 @@ app.get("/api/users/:_id/logs", async(req, res) => {
       }
 
       logobj.log.forEach((log) => {
-        log.date = new Date(log.date).toDateString();
+        log.date = new Date(log.date).toISOString().slice(0, 10);
       })
 
       const response = {
