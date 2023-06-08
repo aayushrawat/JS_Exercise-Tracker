@@ -215,6 +215,10 @@ app.get("/api/users/:_id/logs", async(req, res) => {
         logs = logs.slice(0, parseInt(limit));
       }
 
+      logobj.log.forEach((log) => {
+        log.date = new Date(log.date).toDateString();
+      })
+
       const response = {
         _id:_id,
         username: logobj.username,
