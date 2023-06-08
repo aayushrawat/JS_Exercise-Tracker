@@ -211,7 +211,7 @@ app.get("/api/users/:_id/logs", async(req, res) => {
       if (to) {
         logs = logs.filter(log => new Date(log.date) <= new Date(to));
         logobj.log.forEach((log) => {
-          log.date = new Date(log.date);
+          log.date = new Date(log.date).toString();
         });
       }
       if (limit) {
