@@ -204,14 +204,14 @@ app.get("/api/users/:_id/logs", async(req, res) => {
       if (!logobj) {
         return res.status(404).json({ error: 'User not found' });
       }
-      let logs = logobj.log || [];
+      let logs = logobj.log;
       if (from) {
         logs = logs.filter(log => new Date(log.date) >= new Date(from));
       }
       if (to) {
         logs = logs.filter(log => new Date(log.date) <= new Date(to));
         logobj.log.forEach((log) => {
-          log.date = log.date.toDateString();
+          log.date = new Date (log.date).toDateString();
         });
       }
       if (limit) {
